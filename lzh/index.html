@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Navigation</title>
+  <style>
+    :root {
+      --bg-color: #1a1a1a;
+      --container-bg: rgba(255, 255, 255, 0.2);
+      --pill-bg: rgba(182, 204, 204, 0.4);
+      --text-color: #0a0a0a;
+    }
+
+    @media (pointer: fine) {
+
+      .cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background-color: white;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: transform 0.15s ease-out, width 0.3s, height 0.3s, border-radius 0.3s, background-color 0.1s;
+        transform: translate(-50%, -50%);
+      }
+
+      .cursor-snap {
+        width: 45px;
+        height: 45px;
+        border-radius: 1222px;
+        background-color: transparent;
+        mix-blend-mode: normal;
+
+      }
+    }
+
+    @media (pointer: coarse) {
+      .cursor {
+        display: none;
+      }
+
+      html,
+      body {
+        cursor: auto;
+      }
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
+    }
+
+    /* 2. Remove any overflow restrictions on body if they exist */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      font-family: 'Poppins', sans-serif;
+      color: rgb(0, 0, 0);
+    }
+
+    /* 3. Tell each section where to snap to */
+    section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+
+      /* This ensures the section aligns to the top of the viewport */
+      scroll-snap-align: start;
+      /* Stop scrolling and lock into place */
+      scroll-snap-stop: always;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-color);
+      font-family: 'Poppins', sans-serif;
+      color: rgb(0, 0, 0);
+      /* overflow: hidden was removed to allow scrolling */
+      user-select: none;
+    }
+
+    #background-html {
+      filter: blur(0px);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+
+    .nav-container {
+      position: fixed;
+      top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .segmented-control {
+      position: relative;
+      display: flex;
+      background: var(--container-bg);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 4px;
+      border-radius: 999px;
+      width: 320px;
+      height: 38px;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.245);
+    }
+
+    .segmented-control input {
+      display: none;
+    }
+
+    .segmented-control label {
+      flex: 1;
+      text-align: center;
+      color: var(--text-color);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: none;
+      z-index: 2;
+    }
+
+    .segmented-control label:hover {
+      color: rgb(40, 66, 67);
+      font-weight: bold;
+    }
+
+
+    .selection-pill {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      /* Width is 1/4th of the container minus the padding/margin gaps */
+      width: calc(25% - 8px);
+      height: calc(100% - 8px);
+      background: var(--pill-bg);
+      border-radius: 999px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.359);
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 1;
+      pointer-events: none;
+
+    }
+
+    #nav-home:checked~.selection-pill {
+      transform: translateX(0);
+    }
+
+    #nav-myself:checked~.selection-pill {
+      transform: translateX(calc(100% + 8px));
+    }
+
+    #nav-skills:checked~.selection-pill {
+      transform: translateX(calc(200% + 16px));
+    }
+
+    #nav-footer:checked~.selection-pill {
+      transform: translateX(calc(300% + 24px));
+    }
+
+    section {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      border: none;
+      border-radius: 999px;
+      background-color: #00000082;
+      color: rgb(255, 255, 255);
+      cursor: none;
+      font-family: Poppins, sans-serif;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+
+
+    html,
+    body {
+      cursor: none;
+    }
+
+
+    * {
+      --glass: rgba(255, 255, 255, 0.25);
+      --border: rgba(255, 255, 255, 0.3);
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    .glass {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px var(--shadow);
+      width: 300px;
+      flex: 0 0 auto;
+      margin-top: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .glass:hover {
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.13);
+      backdrop-filter: blur(10px);
+      background-color: rgba(123, 121, 121, 0.074);
+    }
+
+    span.continueScroll {
+      position: absolute;
+      bottom: 20px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.7);
+
+    }
+
+    .progress-container {
+      position: fixed;
+      top: 0;
+      z-index: 2000;
+      /* Higher than nav to stay on top */
+      width: 100%;
+      height: 10px;
+
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(19, 80, 94, 0.4);
+      /* Match your theme color */
+      width: 0%;
+      /* Initial state */
+      transition: width 0.3s ease-out;
+
+    }
+  </style>
+
+</head>
+
+<body>
+  <div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+    <script>
+      window.onscroll = function () { updateProgressBar() };
+
+      function updateProgressBar() {
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("myBar").style.width = scrolled + "%";
+      }
+    </script>
+  </div>
+  <div class="cursor" id="cursor"></div>
+  <iframe id="background-html" src="background.html"></iframe>
+
+  <div class="nav-container">
+    <div class="segmented-control">
+      <input type="radio" name="nav" id="nav-home" checked>
+      <label for="nav-home" onclick="document.getElementById('home').scrollIntoView()">Home</label>
+
+      <input type="radio" name="nav" id="nav-myself">
+      <label for="nav-myself" onclick="document.getElementById('myself').scrollIntoView()">Myself</label>
+
+      <input type="radio" name="nav" id="nav-skills">
+      <label for="nav-skills" onclick="document.getElementById('skills').scrollIntoView()">Skills</label>
+
+      <input type="radio" name="nav" id="nav-footer">
+      <label for="nav-footer" onclick="document.getElementById('footer').scrollIntoView()">Footer</label>
+
+      <div class="selection-pill"></div>
+    </div>
+  </div>
+
+  <section id="home">
+    <h2>Hi, I am ???</h2>
+    <p style="text-align: center;">I am a student in class 4B,<br> SMJK Yu Hua Kajang, Selangor.</p>
+    <button onclick="document.getElementById('myself').scrollIntoView()">Learn more about me</button>
+  </section>
+  <section id="myself">
+    <h1>About Myself</h1>
+    <div class="glass">
+      <h3> Academic Journey</h3>
+      <p>[Describe your studies, subjects, achievements, and interests]</p>
+
+    </div>
+
+
+    <div class="glass">
+      <h3> Personal Goals</h3>
+      <p>[Describe your dreams, future plans, and motivation]</p>
+    </div>
+    <span class="continueScroll">Scroll down</span>
+  </section>
+  <section id="skills">
+    <h1>My Skills</h1>
+    <span class="continueScroll">Scroll down</span>
+  </section>
+  <section id="footer">
+    <style>
+      .emoji {
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      /* The pop animation class */
+      .emoji-pop {
+        animation: emoji-animation 0.4s ease;
+      }
+
+      @keyframes emoji-animation {
+        0% {
+          transform: scale(1);
+        }
+
+        50% {
+          transform: scale(1.5);
+        }
+
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background: var(--container-bg);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: var(--text-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        padding: 0;
+      }
+
+      .back-to-top.show {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Ensure our custom cursor interacts with it */
+      .back-to-top:hover {
+
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.13);
+        backdrop-filter: blur(10px);
+        background-color: rgb(255, 255, 255);
+        transform: translateY(-5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
+
+      
+    </style>
+    <h3>Made with <span class="emoji" id="emoji-cycle">❤️</span> from ...</h3>
+    <span class="continueScroll">Scroll back up</span>
+    <button id="backToTop" class="back-to-top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none"
+        stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="18 15 12 9 6 15"></polyline>
+      </svg>
+    </button>
+    <script defer>
+      // Inside your existing scroll function:
+      
+      const emojiSpan = document.getElementById('emoji-cycle');
+      const emojis = ['❤️', '⭐', '🚀', '✨', '🔥', '😉','👻'];
+      let currentIndex = 0;
+
+      setInterval(() => {
+        currentIndex = (currentIndex + 1) % emojis.length;
+        emojiSpan.classList.add('emoji-pop');
+        emojiSpan.textContent = emojis[currentIndex];
+        setTimeout(() => {
+          emojiSpan.classList.remove('emoji-pop');
+        }, 400);
+      }, 1200);
+      const backToTop = document.getElementById('backToTop');
+
+      // 1. Show/Hide button based on scroll position
+      window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+          backToTop.classList.add('show');
+        } else {
+          backToTop.classList.remove('show');
+        }
+      });
+
+      // 2. Click to scroll up
+      backToTop.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+      // 3. Add to your magnetic cursor list
+      backToTop.addEventListener('mouseenter', () => cursor.classList.add('cursor-snap'));
+      backToTop.addEventListener('mouseleave', () => cursor.classList.remove('cursor-snap'));
+    </script>
+  </section>
+
+  <script>document.addEventListener('DOMContentLoaded', () => {
+      const cursor = document.getElementById('cursor');
+      const labels = document.querySelectorAll('button, .segmented-control label');
+      const sections = document.querySelectorAll('section');
+
+      // Flag to prevent the "double jump"
+      let isClickScrolling = false;
+      let scrollTimeout;
+
+      // 1. Cursor Logic (Fixed for layering)
+      window.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+      });
+
+      labels.forEach(label => {
+        label.addEventListener('mouseenter', () => cursor.classList.add('cursor-snap'));
+        label.addEventListener('mouseleave', () => cursor.classList.remove('cursor-snap'));
+
+        // 2. Click Logic: Disable observer during manual scroll
+        label.addEventListener('click', () => {
+          isClickScrolling = true;
+
+          // Clear any existing timeout
+          clearTimeout(scrollTimeout);
+
+          // Re-enable observer after the smooth scroll finishes (~800ms)
+          scrollTimeout = setTimeout(() => {
+            isClickScrolling = false;
+          }, 800);
+        });
+      });
+
+      // 3. Updated Intersection Observer
+      const observer = new IntersectionObserver((entries) => {
+        // ONLY update the pill if we aren't currently mid-click-scroll
+        if (isClickScrolling) return;
+
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = entry.target.id;
+            const radio = document.getElementById(`nav-${id}`);
+            if (radio) radio.checked = true;
+          }
+        });
+      }, { threshold: 0.6 });
+
+      sections.forEach(s => observer.observe(s));
+    });
+
+  </script>
+</body>
+
+</html>
