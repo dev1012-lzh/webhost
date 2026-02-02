@@ -6,6 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio Navigation</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+  </style>
+  <style>
     :root {
       --bg-color: #1a1a1a;
       --container-bg: rgba(255, 255, 255, 0.2);
@@ -208,6 +211,20 @@
       cursor: none;
     }
 
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    html,
+    body {
+      -ms-overflow-style: none;
+      /* IE and Edge */
+      scrollbar-width: none;
+      /* Firefox */
+    }
+
 
     * {
       --glass: rgba(255, 255, 255, 0.25);
@@ -301,27 +318,44 @@
   </div>
 
   <section id="home">
-    <h2>Hi, I am ???</h2>
-    <p style="text-align: center;">I am a student in class 4B,<br> SMJK Yu Hua Kajang, Selangor.</p>
+    <h2>Hi, I am <span style="font-weight:normal;">LEE ZI HENG</span></h2>
+    <div class="glass">
+      <p style="text-align: center;">I am a student in class 4B,<br> SMJK Yu Hua Kajang, Selangor.</p>
+    </div>
+    <br>
     <button onclick="document.getElementById('myself').scrollIntoView()">Learn more about me</button>
+
   </section>
   <section id="myself">
     <h1>About Myself</h1>
     <div class="glass">
-      <h3> Academic Journey</h3>
-      <p>[Describe your studies, subjects, achievements, and interests]</p>
+      <h3>My previous school</h3>
+      <p>I attended <b>SJKC YU HUA</b>, where I completed my primary education.</p>
 
     </div>
 
 
     <div class="glass">
       <h3> Personal Goals</h3>
-      <p>[Describe your dreams, future plans, and motivation]</p>
+      <p>My personal goals include excelling in my studies and developing strong communication skills. I am motivated to
+        learn continuously and improve myself..</p>
     </div>
+
     <span class="continueScroll">Scroll down</span>
   </section>
   <section id="skills">
     <h1>My Skills</h1>
+    <div class="glass">
+      <h3>Computer Programming Skills</h3>
+      <p>I have basic knowledge in web development. I am currently curious about improving my skills.</p>
+    </div>
+    <div class="glass">
+      <h3>Logical Skills</h3>
+      <p>I can understand complex logical concepts and apply them in problem-solving. Thus, I can think critically and
+        solve problems in real life easily.</p>
+    </div>
+
+
     <span class="continueScroll">Scroll down</span>
   </section>
   <section id="footer">
@@ -387,10 +421,14 @@
         transform: translateY(-5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
-
-      
     </style>
-    <h3>Made with <span class="emoji" id="emoji-cycle">❤️</span> from ...</h3>
+    <h3>What I hate a lot</h3>
+    <div class="glass">
+      <h4>Public speaking</h4>
+      <p>I dislike public speaking as it makes me feel nervous and uncomfortable. I prefer small group discussions so
+        that I can express myself more comfortably.</p>
+    </div>
+    <h3>Made with <span class="emoji" id="emoji-cycle">❤️</span> from LEE ZI HENG</h3>
     <span class="continueScroll">Scroll back up</span>
     <button id="backToTop" class="back-to-top" aria-label="Back to top">
       <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2.5" fill="none"
@@ -400,9 +438,9 @@
     </button>
     <script defer>
       // Inside your existing scroll function:
-      
+
       const emojiSpan = document.getElementById('emoji-cycle');
-      const emojis = ['❤️', '⭐', '🚀', '✨', '🔥', '😉','👻'];
+      const emojis = ['❤️', '⭐', '🚀', '✨', '🔥', '😉', '👻'];
       let currentIndex = 0;
 
       setInterval(() => {
