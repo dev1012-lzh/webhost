@@ -1,0 +1,201 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirector</title>
+    <style>
+        * {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: all .3s;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Redirector</h1>
+    <p>This page is a redirector for the websites under this domain. Click on the navigation links to go to the
+        respective pages.</p>
+    <div
+        style="border: 1px solid #ccc; padding: 20px; background-color: #eaeaea; border-radius: 4px; font-family: monospace;">
+        <style>
+            .file-tree {
+                animation: slideIn 0.5s ease-in-out;
+
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            a:hover {
+                color: #106ebe !important;
+                text-decoration: underline !important;
+                transition: color 0.3s ease;
+            }
+
+            .controls {
+                margin-bottom: 15px;
+                display: flex;
+                gap: 10px;
+            }
+
+            button {
+                padding: 8px 16px;
+                background: linear-gradient(135deg, #8395a2, #106ebe);
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 120, 212, 0.49);
+            }
+
+            button:active {
+                transform: translateY(0);
+            }
+
+            button:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+                color: #666;
+            }
+
+            button:disabled:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            h3.emojiMain {
+                margin-top: 40px;
+                font-weight: normal;
+                font-size: 15px;
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                color: #333;
+            }
+
+            .emoji {
+
+                display: inline-block;
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            }
+
+            /* The pop animation class */
+            .emoji-pop {
+                animation: emoji-animation 0.4s ease;
+            }
+
+            @keyframes emoji-animation {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.5);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            div.linktrue:hover{
+                text-decoration: underline;
+                cursor: pointer;
+
+            }
+        </style>
+
+        <div class="controls">
+
+            <button onclick="expandAll()" id="expandAll">Expand All</button>
+            <button onclick="collapseAll()" id="collapseAll">Collapse All</button>
+        </div>
+        <script>
+
+
+
+            function expandAll() {
+                const divs = document.querySelectorAll('.sublink');
+                divs.forEach(div => {
+                    div.style.display = 'block';
+                    setTimeout(() => {
+
+                        div.style.opacity = 1;
+                    }, 300);
+                });
+                document.getElementById('expandAll').disabled = true;
+                document.getElementById('collapseAll').disabled = false;
+
+            }
+
+            function collapseAll() {
+                const divs = document.querySelectorAll('.sublink');
+                divs.forEach(div => {
+                    div.style.opacity = 0;
+                    setTimeout(() => {
+                        div.style.display = 'none';
+                    }, 300);
+                });
+                document.getElementById('collapseAll').disabled = true;
+                document.getElementById('expandAll').disabled = false;
+            }
+
+
+        </script>
+
+        <div class="file-tree">
+            <div style="margin-bottom: 10px;"><strong>📁 Root</strong></div>
+            <div style="margin-left: 20px;">
+                <div style="margin-bottom: 8px;">
+                    📁 <a style="text-decoration: none; color: #0078d4;" onclick="expandAll()">lzh</a>
+                    <div style="margin-left: 20px; color: #0078d4;" class="sublink linktrue" onclick="window.location.replace('./lzh/index.html')">📄 index.html</div>
+                    <div style="margin-left: 20px; color: #666;" class="sublink">📄 background.html</div>
+                </div>
+                <!--
+                <div style="margin-bottom: 8px;">
+                    📁 <a style="text-decoration: none; color: #0078d4;">wzh</a>
+                    <div style="margin-left: 20px; color: #666;" class="sublink">📄 index.html</div>
+                </div>
+                -->
+            </div>
+        </div>
+    </div>
+    <h3 class="emojiMain">Made with <span class="emoji" id="emoji-cycle">❤️</span> from ...</h3>
+    <script>
+        const emojiSpan = document.getElementById('emoji-cycle');
+        const emojis = ['❤️', '⭐', '🚀', '✨', '🔥', '😉', '👻'];
+        let currentIndex = 0;
+
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % emojis.length;
+            emojiSpan.classList.add('emoji-pop');
+            emojiSpan.textContent = emojis[currentIndex];
+            setTimeout(() => {
+                emojiSpan.classList.remove('emoji-pop');
+            }, 400);
+        }, 1200);
+        const backToTop = document.getElementById('backToTop');
+    </script>
+
+
+    <script>collapseAll();</script>
+</body>
+
+</html>
