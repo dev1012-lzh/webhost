@@ -225,6 +225,10 @@
       /* Firefox */
     }
 
+    .dragging {
+      user-select: none;
+
+    }
 
     * {
       --glass: rgba(255, 255, 255, 0.25);
@@ -308,10 +312,10 @@
       <label for="nav-myself" onclick="document.getElementById('myself').scrollIntoView()">Myself</label>
 
       <input type="radio" name="nav" id="nav-skills">
-      <label for="nav-skills" onclick="document.getElementById('skills').scrollIntoView()">Skills</label>
+      <label for="nav-skills" onclick="document.getElementById('skills').scrollIntoView()">Hobbies</label>
 
       <input type="radio" name="nav" id="nav-footer">
-      <label for="nav-footer" onclick="document.getElementById('footer').scrollIntoView()">Footer</label>
+      <label for="nav-footer" onclick="document.getElementById('footer').scrollIntoView()">Ending</label>
 
       <div class="selection-pill"></div>
     </div>
@@ -337,21 +341,21 @@
 
     <div class="glass">
       <h3> Personal Goals</h3>
-      <p>My personal goals include excelling in my studies and developing strong communication skills. I am motivated to
+      <p>I want to excel in my studies and develop strong communication skills. I am motivated to
         learn continuously and improve myself..</p>
     </div>
 
     <span class="continueScroll">Scroll down</span>
   </section>
   <section id="skills">
-    <h1>My Skills</h1>
+    <h1>Hobbies</h1>
     <div class="glass">
-      <h3>Computer Programming Skills</h3>
-      <p>I have basic knowledge in web development. I am currently curious about improving my skills.</p>
+      <h3></h3>
+      <p>I like anything related to computer. I have basic knowledge in web development. I am currently curious about improving my skills.</p>
     </div>
     <div class="glass">
-      <h3>Logical Skills</h3>
-      <p>I can understand complex logical concepts and apply them in problem-solving. Thus, I can think critically and
+      
+      <p>I like puzzles and sudoku. Thus, I can think critically and
         solve problems in real life easily.</p>
     </div>
 
@@ -421,6 +425,14 @@
         transform: translateY(-5px);
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
+
+      /* This class disables snapping during the drag */
+      .no-snap {
+        scroll-snap-type: none !important;
+      }
+
+      /* Visual cue for the user */
+      .dragging-active {}
     </style>
     <h3>What I hate a lot</h3>
     <div class="glass">
@@ -523,7 +535,76 @@
       sections.forEach(s => observer.observe(s));
     });
 
+
+
+
   </script>
+  <script>document.addEventListener('DOMContentLoaded', () => {
+      const html = document.documentElement;
+      let isDown = false;
+      let startY;
+      let currentY;
+
+      window.addEventListener('mousedown', (e) => {
+        if (e.target.closest('button') || e.target.closest('label') || e.target.closest('.back-to-top')) return;
+
+        isDown = true;
+        startY = e.clientY; // Capture initial click position
+        html.classList.add('no-snap');
+        document.body.classList.add('dragging-active');
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        currentY = e.clientY;
+
+        // Optional: Visual feedback while dragging
+        const diff = startY - currentY;
+        // We don't actually scroll much here, just a slight nudge for feedback
+        html.scrollTop += diff * 0.05;
+      });
+
+      const stopDragging = () => {
+        if (!isDown) return;
+        isDown = false;
+
+        html.classList.remove('no-snap');
+        document.body.classList.remove('dragging-active');
+
+        const endY = currentY || startY;
+        const distance = startY - endY;
+        const sectionHeight = window.innerHeight;
+        const currentSection = Math.round(window.scrollY / sectionHeight);
+
+        // THRESHOLD: If user dragged more than 50px, jump to next/prev section
+        if (Math.abs(distance) > 50) {
+          if (distance > 0) {
+            // Dragged Up -> Go Down
+            window.scrollTo({ top: (currentSection + 1) * sectionHeight, behavior: 'smooth' });
+          } else {
+            // Dragged Down -> Go Up
+            window.scrollTo({ top: (currentSection - 1) * sectionHeight, behavior: 'smooth' });
+          }
+        } else {
+          // Not enough drag? Snap back to current section
+          window.scrollTo({ top: currentSection * sectionHeight, behavior: 'smooth' });
+        }
+
+        currentY = null; // Reset
+      };
+
+      window.addEventListener('mouseup', stopDragging);
+      window.addEventListener('mouseleave', stopDragging);
+    });
+  </script>
+  <style>
+    .dragging-active #cursor {
+      transform: translate(-50%, -50%) scale(0.7);
+      background-color: #DAE3F3;
+      /* Using your favorite color! */
+      opacity: 0.8;
+    }
+  </style>
 </body>
 
 </html>
